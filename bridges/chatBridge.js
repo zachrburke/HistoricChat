@@ -55,8 +55,6 @@ ChatBridge.prototype.onJoin = function(socket, nickname) {
 		self.addUser(nickname);
 
 		var message = new Message('HistoricChat', nickname + ' has joined the room');
-		message.created_at = new Date();
-		message.timestamp = dateformat(message.created_at, '(HH:MM:ss)');
 
 		self.chatProvider.addToArchive(message, function(error) {
 			self.io.sockets.emit('newUserJoined', {nicknames: self.nicknames});
@@ -67,7 +65,8 @@ ChatBridge.prototype.onJoin = function(socket, nickname) {
 
 ChatBridge.prototype.onMessage = function(message) {
 	var self = this;
-	message.created_at = new Date();
+
+	message = new Message(message.nickname, message.text);
 
 	this.chatProvider.addToArchive(message, function(error) {
 		if (error)
@@ -92,8 +91,6 @@ ChatBridge.prototype.onDisconnect = function(socket) {
 		self.removeUser(nickname);
 
 		var message = new Message('HistoricChat', nickname + ' has left the room');
-		message.created_at = new Date();
-		message.timestamp = dateformat(message.created_at, '(HH:MM:ss)');
 
 		self.chatProvider.addToArchive(message, function(error) {
 			self.io.sockets.emit('userDisconnected', self.nicknames);

@@ -13,8 +13,6 @@ exports.send = function(req, res, db, io) {
 	var chatProvider = new ChatProvider(db);
 
 	var message = new Message(req.body.nickname, req.body.text);
-	message.created_at = new Date();
-	message.timestamp = dateformat(message.created_at, '(HH:MM:ss)');
 
 	chatProvider.addToArchive(message, function(error) {
 		if (error)

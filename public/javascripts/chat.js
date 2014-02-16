@@ -6,7 +6,6 @@
 	var Message = function(message) {
 		this.nickname = message.nickname;
 		this.text = message.text;
-		this.timestamp = message.timestamp;
 	};
 
 	var ChatViewModel = function() {
@@ -34,7 +33,6 @@
 			{
 				nickname: self.nickname(),
 				text: self.chatText(),
-				timestamp: new Date().getTimestampString()
 			}));
 			self.chatText('');
 		};
@@ -62,9 +60,5 @@
 	};
 
 	ko.applyBindings(new ChatViewModel());
-
-	Date.prototype.getTimestampString = function() {
-		return '(' + this.getHours() + ":" + this.getMinutes() + ":" + this.getSeconds() + ")";
-	};
 
 })();
