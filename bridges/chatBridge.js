@@ -50,18 +50,12 @@ ChatBridge.prototype.removeUser = function(nickname) {
 
 ChatBridge.prototype.onJoin = function(socket, nickname) {
 	var self = this;
-	var i = 2;
+	
+	var origNickname = nickname
+	nickname = self.enforceUniqueNickname(nickname);
 
-	// quick way to semi-enforce unique names
-	while (self.nicknames.indexOf(nickname) != -1) {
-		nickname = nickname + '_' + i;
-		i++;
-
-		if (i > 100)
-			break; 
-	}
-
-	socket.emit('changeNickname', nickname);
+	if (origNickname !== nickname)
+		socket.emit('changeNickname', nickname);
 
 	socket.set('nickname', nickname, function() {
 		self.addUser(nickname);
@@ -109,6 +103,22 @@ ChatBridge.prototype.onDisconnect = function(socket) {
 			self.io.sockets.emit('msg', message);
 		});
 	})
+};
+
+ChatBridge.prototype.enforceUniqueNickname = function(nickname) {
+	var i = 2;
+	var origLength = nickname.length;
+
+	// quick way to semi-enforce unique names
+	while (this.nicknames.indexOf(nickname) != -1) {
+		nickname = nickname.slice(0, origLength) + '_' + i;
+		i++;
+
+		if (i > 100)
+			break; 
+	}
+
+	return nickname;
 };
 
 exports.ChatBridge = ChatBridge;
