@@ -1,0 +1,35 @@
+extends layout
+
+block content
+	h1= title
+	p Welcome to #{title}
+
+	section.chat
+		#signIn(data-bind="visible: !joined()")
+			p Please enter a nickname
+			form(data-bind="submit: join")
+				input(placeholder="nickname", data-bind="value: nickname")
+				button Submit
+
+		#messages(data-bind="foreach: messages")
+			.message 
+				.meta
+					strong(data-bind="text: nickname")
+					span(data-bind="text: timestamp")
+
+				.text(data-bind="text: text")
+
+		#talk(data-bind="visible: joined()")
+			form(data-bind="submit: message")
+				input(placeholder="type here to chat", data-bind="value: chatText")
+				button Submit
+
+		h4 Users online right now
+		#nicknames(data-bind="foreach: nicknames")
+			p(data-bind="text: $data")
+
+
+	script(src="/socket.io/socket.io.js")
+	script(src="/javascripts/knockout.js")
+	script(src="/javascripts/cookies.min.js")
+	script(src="/javascripts/chat.js")
