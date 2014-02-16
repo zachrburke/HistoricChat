@@ -8,7 +8,7 @@ block content
 		#signIn(data-bind="visible: !joined()")
 			p Please enter a nickname
 			form(data-bind="submit: join")
-				input(placeholder="nickname", data-bind="value: nickname")
+				input(placeholder="nickname", maxlength="30", data-bind="value: nickname")
 				button Submit
 				.error(data-bind="text: error")
 

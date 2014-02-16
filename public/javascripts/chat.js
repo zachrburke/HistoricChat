@@ -29,6 +29,9 @@
 		};
 
 		self.message = function(data, event) {
+			if (self.chatText().length <= 0)
+				return;
+			
 			socket.emit('msg', new Message(
 			{
 				nickname: self.nickname(),
