@@ -15,11 +15,16 @@
 		self.nickname = ko.observable('Guest');
 		self.joined = ko.observable(false);
 		self.chatText = ko.observable('');
+		self.error = ko.observable('');
 
 		self.messages = ko.observableArray([]);
 		self.nicknames = ko.observableArray([]);
 
 		self.join = function(data, event) {
+			if (self.nickname().length <= 0) {
+				self.error('nickname cannot be empty');
+				return;
+			}
 			socket.emit('join', this.nickname());
 			self.joined(true);
 		};

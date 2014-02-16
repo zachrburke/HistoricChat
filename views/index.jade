@@ -10,6 +10,7 @@ block content
 			form(data-bind="submit: join")
 				input(placeholder="nickname", data-bind="value: nickname")
 				button Submit
+				.error(data-bind="text: error")
 
 		#messages(data-bind="foreach: messages")
 			.message 
@@ -24,9 +25,36 @@ block content
 				input(placeholder="type here to chat", data-bind="value: chatText")
 				button Submit
 
-		h4 Users online right now
-		#nicknames(data-bind="foreach: nicknames")
-			p(data-bind="text: $data")
+		#users
+			h4 Users online right now
+			#nicknames(data-bind="foreach: nicknames")
+				p(data-bind="text: $data")
+
+		aside
+			h4 API Reference
+			h4 POST /api/send
+			p body params:
+			p @nickname 
+			p @text
+			h4 try it out
+			form(method="POST", action="/api/send")
+				div
+					input(name="nickname", placeholder="nickname")
+				div
+					input(name="text", placeholder="text")
+				button submit
+
+			h4 GET /api/history/:limit?nickname=$nickname
+			p params:
+			p @limit - number of results to come back (max 1000)
+			p @nickname - get results that match this nickname
+			h4 sample requests
+			div
+				a(href="/api/history/10", target="blank") latest 100 entries
+			div
+				a(href="/api/history/1000?nickname=HistoricChat", target="blank") all records of joining the chat
+
+
 
 
 	script(src="/socket.io/socket.io.js")

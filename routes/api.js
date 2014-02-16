@@ -34,8 +34,9 @@ exports.history = function(req, res, db) {
 	var chatProvider = new ChatProvider(db);
 
 	var limit = req.params.limit > 1000 ? 1000 : req.params.limit;
+	var nickname = req.query.nickname;
 
-	chatProvider.getChatHistory(limit, function(error, results) {
+	chatProvider.getChatHistory(limit, nickname, function(error, results) {
 		if (error) {
 			res.json({ error: error });
 		}

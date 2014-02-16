@@ -15,7 +15,7 @@ ChatBridge.prototype.initSocket = function(io) {
 	self.io = io;
 
 	io.sockets.on('connection', function(socket) {
-		self.chatProvider.getChatHistory(10, function(error, results) {
+		self.chatProvider.getChatHistory(10, null, function(error, results) {
 			socket.emit('nicknames', self.nicknames);
 			
 			if (error) {
@@ -61,7 +61,7 @@ ChatBridge.prototype.onJoin = function(socket, nickname) {
 		self.chatProvider.addToArchive(message, function(error) {
 			self.io.sockets.emit('newUserJoined', {nicknames: self.nicknames});
 			self.io.sockets.emit('msg', message);
-		})
+		});
 	});
 };
 
@@ -90,7 +90,16 @@ ChatBridge.prototype.onDisconnect = function(socket) {
 			return;
 
 		self.removeUser(nickname);
-		self.io.sockets.emit('userDisconnected', self.nicknames);
+
+		var message = new Message('HistoricChat', nickname + ' has left the room');
+		message.created_at = new Date();
+		message.timestamp = dateformat(message.created_at, '(HH:MM:ss)');
+
+		self.chatProvider.addToArchive(message, function(error) {
+			self.io.sockets.emit('userDisconnected', self.nicknames);
+			self.io.sockets.emit('msg', message);
+		});
+		
 
 		console.log('user disconnected', nickname, self.nicknames);
 	})

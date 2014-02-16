@@ -24,14 +24,16 @@ ChatProvider.prototype.addToArchive = function(message, callback) {
 	})
 };
 
-ChatProvider.prototype.getChatHistory = function(limit, callback) {
+ChatProvider.prototype.getChatHistory = function(limit, nickname, callback) {
 	this.getCollection(function(error, collection) {
 		if (error) {
 			callback(error);
 			return;
 		}
 
-		collection.find({}, { sort: [['created_at', 'desc']], limit: limit }).toArray(function(error, results) {
+		var query = nickname ? { nickname: nickname } : {}
+
+		collection.find(query, { sort: [['created_at', 'desc']], limit: limit }).toArray(function(error, results) {
 			if (error) {
 				callback(error);
 				return;
