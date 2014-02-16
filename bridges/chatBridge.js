@@ -50,6 +50,16 @@ ChatBridge.prototype.removeUser = function(nickname) {
 
 ChatBridge.prototype.onJoin = function(socket, nickname) {
 	var self = this;
+	var i = 2;
+
+	// quick way to semi-enforce unique names
+	while (self.nicknames.indexOf(nickname) != -1) {
+		nickname = nickname + '_' + i;
+		i++;
+
+		if (i > 100)
+			break; 
+	}
 
 	socket.set('nickname', nickname, function() {
 		self.addUser(nickname);
@@ -82,7 +92,7 @@ ChatBridge.prototype.onDisconnect = function(socket) {
 
 	socket.get('nickname', function(err, nickname) {
 		if (err) {
-			console.log('there was an error', err);
+			console.log(err);
 			return;
 		}
 		if (!nickname)
@@ -96,9 +106,6 @@ ChatBridge.prototype.onDisconnect = function(socket) {
 			self.io.sockets.emit('userDisconnected', self.nicknames);
 			self.io.sockets.emit('msg', message);
 		});
-		
-
-		console.log('user disconnected', nickname, self.nicknames);
 	})
 };
 
