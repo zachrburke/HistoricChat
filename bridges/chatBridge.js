@@ -61,6 +61,8 @@ ChatBridge.prototype.onJoin = function(socket, nickname) {
 			break; 
 	}
 
+	socket.emit('changeNickname', nickname);
+
 	socket.set('nickname', nickname, function() {
 		self.addUser(nickname);
 

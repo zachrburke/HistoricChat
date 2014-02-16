@@ -54,11 +54,15 @@
 
 		socket.on('userDisconnected', function(nicknames) {
 			self.nicknames(nicknames);
-		})
+		});
 
 		socket.on('history', function(archive) {
 			self.messages(archive);
-		})
+		});
+
+		socket.on('changeNickname', function(nickname) {
+			self.nickname(nickname);
+		});
 
 	};
 
